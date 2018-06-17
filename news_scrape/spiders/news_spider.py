@@ -29,13 +29,13 @@ class NewsSpider(scrapy.Spider):
                 next_page = response.url+"page/"+str((current_page_number+1))+"/"
             else:
                 next_page = response.url[:-2]+str((current_page_number+1))
-            if(current_page_number<5):
+            if(current_page_number<10):
                 yield scrapy.Request(next_page, callback=self.parse)
 
         elif("www.ft.lk" in response.url):
             for i in range(len(response.css('div.col-md-7 p span::text').extract())):
                 title = response.css('div.col-md-7 a h1::text')[i].extract()
-                date = response.css('div.col-md-7 p span::text')[0].extract()
+                date = response.css('div.col-md-7 p span::text')[i].extract()
                 date = date.split(',')[1].strip().split(' ')
                 date = date[0]+" "+date[1]+", "+date[2]
                 yield {
@@ -53,13 +53,13 @@ class NewsSpider(scrapy.Spider):
             else:
                 next_page_number = int(response.url[-2:])+30
                 next_page = response.url[:-2]+str(next_page_number)
-            if(current_page_number<5):
+            if(current_page_number<10):
                 yield scrapy.Request(next_page, callback=self.parse)
 
         elif("www.hirunews.lk" in response.url):
             for i in range(len(response.css('div.middle-box div.rp-ltsbx div.rp-mian div.lts-cntp a::text').extract())):
                 title = response.css('div.middle-box div.rp-ltsbx div.rp-mian div.lts-cntp a::text')[i].extract()
-                date = date = response.css('div.middle-box div.rp-ltsbx div.rp-mian div.time::text')[0].extract()
+                date = date = response.css('div.middle-box div.rp-ltsbx div.rp-mian div.time::text')[i].extract()
                 date = date.split(',')[1].strip().split(' ')
                 date = date[0]+" "+date[1]+", "+date[2]
                 yield {
@@ -72,5 +72,5 @@ class NewsSpider(scrapy.Spider):
             current_page_number = int(response.css('div.pagi div.pagi_2 b::text').extract_first())
             print("currenttttttttttttttttttttttttttttttttttt", current_page_number)
             next_page = response.url[:-1]+str((current_page_number+1))
-            if(current_page_number<5):
+            if(current_page_number<10):
                 yield scrapy.Request(next_page, callback=self.parse)

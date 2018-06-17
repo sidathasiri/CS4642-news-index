@@ -9,7 +9,7 @@ class NewsSpider(scrapy.Spider):
     def parse(self, response):
         for i in range(len(response.css('div.col-md-7 p span::text').extract())):
             title = response.css('div.col-md-7 a h1::text')[i].extract()
-            date = response.css('div.col-md-7 p span::text')[0].extract()
+            date = response.css('div.col-md-7 p span::text')[i].extract()
             date = date.split(',')[1].strip().split(' ')
             date = date[0]+" "+date[1]+", "+date[2]
             yield {
