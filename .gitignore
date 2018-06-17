@@ -1,4 +1,3 @@
 .idea/
 news_scrape/__pycache__/
 news_scrape/spiders/__pycache__/
-news.json
