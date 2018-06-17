@@ -8,10 +8,18 @@ class NewsSpider(scrapy.Spider):
 
     def parse(self, response):
         global newsList
-        for news in response.css('div.panel-heading'):
+        titles = response.css('div.sub-1-news-block::attr(data-page-short-title)').extract()
+        dates = response.css('div.sub-1-news-block::attr(data-post-date)').extract()
+        for i in range(len(titles)):
             yield {
-                'text': news.css('h3.w-400::text').extract_first()
+                'text': titles[i],
+                'date': dates[i]
             }
+
+        # for news in response.css('div.panel-heading'):
+        #     yield {
+        #         'text': news.css('h3.w-400::text').extract_first()
+        #     }
         current_page_number = int(response.css('div.col-xs-12').css('li.active').css('span::text').extract_first())
         if(current_page_number==1):
             next_page = response.url+"page/"+str((current_page_number+1))+"/"
