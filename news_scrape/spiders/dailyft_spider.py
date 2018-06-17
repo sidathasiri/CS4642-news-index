@@ -7,7 +7,6 @@ class NewsSpider(scrapy.Spider):
     ]
 
     def parse(self, response):
-        global newsList
         for i in range(len(response.css('div.col-md-7 p span::text').extract())):
             title = response.css('div.col-md-7 a h1::text')[i].extract()
             date = response.css('div.col-md-7 p span::text')[0].extract()
@@ -15,7 +14,9 @@ class NewsSpider(scrapy.Spider):
             date = date[0]+" "+date[1]+", "+date[2]
             yield {
                 'text': title,
-                'date': date
+                'date': date,
+                'source': 'DailyFT',
+                'category': 'Local'
             }
 
         current_page_number = int(response.css('div.page-nation li.active span::text').extract_first())
@@ -26,5 +27,5 @@ class NewsSpider(scrapy.Spider):
         else:
             next_page_number = int(response.url[-2:])+30
             next_page = response.url[:-2]+str(next_page_number)
-        if(current_page_number<10):
+        if(current_page_number<5):
             yield scrapy.Request(next_page, callback=self.parse)
